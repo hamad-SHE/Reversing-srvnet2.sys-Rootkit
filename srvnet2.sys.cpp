@@ -31,74 +31,7 @@ void sub_140008A14(char* a1, char* a2) {
 
 
 }
-__int64 v4; // rdx
-unsigned __int64 v5; // r9
-char* v6; // rcx
-unsigned __int64 v7; // r8
-unsigned __int64 i; // r8
-__m128 v9; // xmm0
-char* v10; // r8
-__m128* v11; // rcx
-unsigned __int64 v12; // r8
-unsigned __int64 v13; // r9
-unsigned __int64 j; // r9
-__int64 v15; // r8
 
-result = a1;
-if (a3 < 8)
-{
-	for (i = a3 & 7; i; --i)
-		a1->m128_i8[i - 1] = a2;
-}
-else
-{
-	v4 = 0x101010101010101i64 * a2;
-	if (a3 >= 0x4F)
-	{
-		v9 = _mm_movelh_ps(v4, v4);
-		*a1 = v9;
-		v10 = a1 + a3;
-		v11 = (&a1[1] & 0xFFFFFFFFFFFFFFF0ui64);
-		v12 = v10 - v11;
-		v13 = v12 >> 7;
-		if (v12 >> 7)
-		{
-			do
-			{
-				*v11 = v9;
-				v11[1] = v9;
-				v11 += 8;
-				v11[-6] = v9;
-				v11[-5] = v9;
-				--v13;
-				v11[-4] = v9;
-				v11[-3] = v9;
-				v11[-2] = v9;
-				v11[-1] = v9;
-			}         while (v13);
-			v12 &= 0x7Fu;
-		}
-		for (j = v12 >> 4; j; --j)
-			*v11++ = v9;
-		v15 = v12 & 0xF;
-		if (v15)
-			*(v11 + v15 - 16) = v9;
-	}
-	else
-	{
-		v5 = a3 & 0xFFFFFFFFFFFFFFF8ui64;
-		v6 = a1 + (a3 & 0xFFFFFFFFFFFFFFF8ui64);
-		do
-		{
-			*(&result->m128_u64[-1] + v5) = v4;
-			v5 -= 8i64;
-		}       while (v5);
-		v7 = a3 & 7;
-		if (v7)
-			*&v6[v7 - 8] = v4;
-	}
-}
-return result;
 
 void dotSysStr()
 {
@@ -380,7 +313,7 @@ void sub_1400012D0()
 
 void sub_14000201C(char* a1, char* a2)
 {
-	__int64 result; // rax
+
 	int v3; // [rsp+0h] [rbp-18h]
 
 	v3 = 0;
@@ -445,19 +378,80 @@ void sub_1400010C8()
 
 
 //
-__int64 __fastcall sub_140003890(char* a1, char* a2)
-{
-	__int64 result; // rax
-	int v3; // [rsp+0h] [rbp-18h]
 
-	v3 = 0;
-	do
-	{
-		a2[v3] = a1[16] ^ a1[v3];
-		result = a2[v3++];
-	}   while (a2[v3 - 1]);
-	return result;
+void sub_140002FC0()
+{
+	char v1[24]; // [rsp+28h] [rbp-30h] BYREF
+	char byte_1400804A8[30];
+
+	v1[0] = 57;
+	v1[1] = 23;
+	v1[2] = 39;
+	v1[3] = 28;
+	v1[4] = 1;
+	v1[5] = 6;
+	v1[6] = 19;
+	v1[7] = 17;
+	v1[8] = 25;
+	v1[9] = 54;
+	v1[10] = 23;
+	v1[11] = 6;
+	v1[12] = 19;
+	v1[13] = 17;
+	v1[14] = 26;
+	v1[15] = 34;
+	v1[16] = 0;
+	v1[17] = 29;
+	v1[18] = 17;
+	v1[19] = 23;
+	v1[20] = 1;
+	v1[21] = 1;
+	v1[22] = 114;
+	v1[23] = 114;
+	xor_algorithm(v1, byte_1400804A8,23 );
+	
+
 }
+
+void sub_140002EE8()
+{
+	char v1[32]; // [rsp+28h] [rbp-30h] BYREF
+	char unk_1400804E8[30];
+	v1[0] = 46;
+	v1[1] = 13;
+	v1[2] = 50;
+	v1[3] = 17;
+	v1[4] = 17;
+	v1[5] = 21;
+	v1[6] = 11;
+	v1[7] = 14;
+	v1[8] = 46;
+	v1[9] = 12;
+	v1[10] = 17;
+	v1[11] = 29;
+	v1[12] = 27;
+	v1[13] = 13;
+	v1[14] = 13;
+	v1[15] = 60;
+	v1[16] = 7;
+	v1[17] = 46;
+	v1[18] = 12;
+	v1[19] = 17;
+	v1[20] = 29;
+	v1[21] = 27;
+	v1[22] = 13;
+	v1[23] = 13;
+	v1[24] = 55;
+	v1[25] = 26;
+	v1[26] = 126;
+	v1[27] = 126;
+	xor_algorithm(v1, unk_1400804E8, 27);
+	printf("%s\n", unk_1400804E8);
+}
+
+
+
+
 int main() {
 
 	dotSysStr();
@@ -469,6 +463,8 @@ int main() {
 	sub_1400012D0();
 	sub_140001000();//PsTerminateSystemThread
 	sub_1400010C8();//ZwClose
+	sub_140002FC0();
+	sub_140002EE8();
 	getchar();
 	return 0;
 }
