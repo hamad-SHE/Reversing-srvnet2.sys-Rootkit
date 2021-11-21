@@ -3,24 +3,64 @@
 
 
 
-//used in function "GetDllBaseAddress";
-//typedef struct _LDR_DATA_TABLE_ENTRY {
-//	PVOID Reserved1[2];              // 0
-//	LIST_ENTRY InMemoryOrderLinks;   // 16
-//	PVOID Reserved2[2];              // 32
-//	PVOID DllBase;                   // 48
-//	PVOID EntryPoint;                // 56
-//	PVOID Reserved3;                 // 64
-//	UNICODE_STRING FullDllName;      // 72 
-//	UNICODE_STRING DllName;          // 88
-//	PVOID Reserved5[3];
-//	union {
-//		ULONG CheckSum;
-//		PVOID Reserved6;
-//	};
-//	ULONG TimeDateStamp;
-//} LDR_DATA_TABLE_ENTRY, * PLDR_DATA_TABLE_ENTRY;
+used in function "GetDllBaseAddress";
+typedef struct _LDR_DATA_TABLE_ENTRY {
+	PVOID Reserved1[2];              // 0
+	LIST_ENTRY InMemoryOrderLinks;   // 16
+	PVOID Reserved2[2];              // 32
+	PVOID DllBase;                   // 48
+	PVOID EntryPoint;                // 56
+	PVOID Reserved3;                 // 64
+	UNICODE_STRING FullDllName;      // 72 
+	UNICODE_STRING DllName;          // 88
+	PVOID Reserved5[3];
+	union {
+		ULONG CheckSum;
+		PVOID Reserved6;
+	};
+	ULONG TimeDateStamp;
+} LDR_DATA_TABLE_ENTRY, * PLDR_DATA_TABLE_ENTRY;
 
+
+
+
+
+
+
+void kernelCode() {
+
+	KAPC_STATE state;
+	KeStackAttachProcess(proc, &state);
+
+	PPEB pPeb = (PPEB)PsGetProcessPeb(proc);
+	if (!pPeb)
+	{
+		return 0;
+	}
+	PPEB_LDR_DATA pLdr = (PPEB_LDR_DATA)pPeb->Ldr;
+
+	if (!pLdr)
+	{
+		KeUnstackDetachProcess(&state);
+		return 1;
+	}
+
+	UNICODE_STRING name;
+
+	for (PLIST_ENTRY list = (PLIST_ENTRY)pLdr->ModuleListLoadOrder.Flink;
+		list != &pLdr->ModuleListLoadOrder; list = (PLIST_ENTRY)list->Flink)
+	{
+		PLDR_DATA_TABLE_ENTRY pEntry =
+			CONTAINING_RECORD(list, LDR_DATA_TABLE_ENTRY, InLoadOrderModuleList);
+		if (RtlCompareUnicodeString(&pEntry->BaseDllName, &module_name, TRUE) ==
+			0) {
+			ULONG64 baseAddr = (ULONG64)pEntry->DllBase;
+			KeUnstackDetachProcess(&state);
+			return baseAddr;
+		}
+	}
+	KeUnstackDetachProcess(&state);
+}
 
 
 
