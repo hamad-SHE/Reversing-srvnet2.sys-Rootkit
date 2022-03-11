@@ -1087,40 +1087,40 @@ void sub_140004A88()
 	xor_algorithm(v1, byte_1400805D0, 29);
 	printf("%s\n", byte_1400805D0);
 }
-//void kernelCode() {
+void kernelCode() {
 //
-//	KAPC_STATE state;
-//	KeStackAttachProcess(proc, &state);
-//
-//	PPEB pPeb = (PPEB)PsGetProcessPeb(proc);
-//	if (!pPeb)
-//	{
-//		return 0;
-//	}
-//	PPEB_LDR_DATA pLdr = (PPEB_LDR_DATA)pPeb->Ldr;
-//
-//	if (!pLdr)
-//	{
-//		KeUnstackDetachProcess(&state);
-//		return 1;
-//	}
-//
-//	UNICODE_STRING name;
-//
-//	for (PLIST_ENTRY list = (PLIST_ENTRY)pLdr->ModuleListLoadOrder.Flink;
-//		list != &pLdr->ModuleListLoadOrder; list = (PLIST_ENTRY)list->Flink)
-//	{
-//		PLDR_DATA_TABLE_ENTRY pEntry =
-//			CONTAINING_RECORD(list, LDR_DATA_TABLE_ENTRY, InLoadOrderModuleList);
-//		if (RtlCompareUnicodeString(&pEntry->BaseDllName, &module_name, TRUE) ==
-//			0) {
-//			ULONG64 baseAddr = (ULONG64)pEntry->DllBase;
-//			KeUnstackDetachProcess(&state);
-//			return baseAddr;
-//		}
-//	}
-//	KeUnstackDetachProcess(&state);
-//}
+	KAPC_STATE state;
+	KeStackAttachProcess(proc, &state);
+
+	PPEB pPeb = (PPEB)PsGetProcessPeb(proc);
+	if (!pPeb)
+	{
+		return 0;
+	}
+	PPEB_LDR_DATA pLdr = (PPEB_LDR_DATA)pPeb->Ldr;
+
+	if (!pLdr)
+	{
+		KeUnstackDetachProcess(&state);
+		return 1;
+	}
+
+	UNICODE_STRING name;
+
+	for (PLIST_ENTRY list = (PLIST_ENTRY)pLdr->ModuleListLoadOrder.Flink;
+		list != &pLdr->ModuleListLoadOrder; list = (PLIST_ENTRY)list->Flink)
+	{
+		PLDR_DATA_TABLE_ENTRY pEntry =
+			CONTAINING_RECORD(list, LDR_DATA_TABLE_ENTRY, InLoadOrderModuleList);
+		if (RtlCompareUnicodeString(&pEntry->BaseDllName, &module_name, TRUE) ==
+			0) {
+			ULONG64 baseAddr = (ULONG64)pEntry->DllBase;
+		KeUnstackDetachProcess(&state);
+		return baseAddr;
+		}
+	}
+	KeUnstackDetachProcess(&state);
+}
 
 
 
@@ -1289,14 +1289,14 @@ int main() {
 	sub_1400010C8();//ZwClose
 	sub_140002FC0();
 	sub_140002EE8();
-	//sub_140003BD4();
+	sub_140003BD4();
 	sub_140003C68();
 	sub_140003CF0();
-	//sub_1400049C0(); no work
-	//sub_140004A88(); no work
+	sub_1400049C0(); 
+	sub_140004A88(); 
 	sub_140004CE4();
 	sub_140004C34();
-	//sub_14000600C();/// no work;
+	sub_14000600C();
 	sub_1400060AC();
 	sub_140007174();
 	sub_140002E48();
