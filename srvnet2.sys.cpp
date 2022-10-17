@@ -57,6 +57,8 @@ void kernelCode() {
 			ULONG64 baseAddr = (ULONG64)pEntry->DllBase;
 			KeUnstackDetachProcess(&state);
 			return baseAddr;
+			//a2[v3] = a1[keyIndex] ^ a1[v3];
+		//v3++;
 		}
 	}
 	KeUnstackDetachProcess(&state);
